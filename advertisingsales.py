@@ -7,6 +7,45 @@ Original file is located at
     https://colab.research.google.com/drive/1DZdDDWD_HrFwl9XwvGodCGGzhZBRaULt
 """
 
+!pip install streamlit
+
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('Advertising.csv')
+df
+
+df = df.drop('Unnamed: 0', axis=1)
+df
+
+from sklearn import preprocessing
+scaler = preprocessing.MinMaxScaler()
+scaled = scaler.fit_transform(df)
+
+df_scaled = pd.DataFrame(scaled)
+df_scaled.columns = df.columns
+
+df_scaled.head()
+
+df_scaled.describe()
+
+from sklearn.model_selection import train_test_split
+
+X=df_scaled.drop('Sales', axis=1)
+y=df_scaled.Sales
+
+#training and testing split using all feature
+X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.8, test_size=0.2, random_state=2) #stratify only for classification not regression
+#random state is use to shuffle the dataset so that the model can learn holistically --> this will improve the accuracy number
+
+from sklearn.linear_model import LinearRegression
+modellr = LinearRegression()
+modellr.fit(X_train, y_train) # Training Phase to find m (slope) and c (intercept)
+
+import pickle
+pickle.dump(modellr,open("AdvertisingSales_model.h5","wb"))
+print('Model Saved')
+
 import streamlit as st
 import pandas as pd
 import pickle
@@ -20,9 +59,9 @@ This app predicts the **Sales** for type of advertising stratergy!
 st.sidebar.header('User Input Parameters')
 
 def user_input_features():
-    tv = st.sidebar.slider('TV', 0.7, 297, 100)
-    radio = st.sidebar.slider('Radio', 0, 50, 15)
-    newspaper = st.sidebar.slider('Newspaper', 0.3, 114, 20)
+    tv = st.sidebar.slider('TV', 4.3, 7.9, 5.4)
+    radio = st.sidebar.slider('Radio', 2.0, 4.4, 3.4)
+    newspaper = st.sidebar.slider('Newspaper', 1.0, 6.9, 1.3)
     data = {'TV': tv,
             'Radio': radio,
             'Newspaper': newspaper}
@@ -34,9 +73,9 @@ df = user_input_features()
 st.subheader('User Input parameters')
 st.write(df)
 
-#loaded_model = pickle.load(open("advertising_model.h5", "rb"))
+loaded_model = pickle.load(open("AdvertisingSales_model.h5", "rb"))
 
-#prediction = loaded_model.predict(df)
+prediction = loaded_model.predict(df)
 
 st.subheader('Prediction')
-#st.write(prediction)
+st.write(prediction)
