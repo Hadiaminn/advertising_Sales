@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import pickle
@@ -12,9 +11,9 @@ This app predicts the **Sales** for type of advertising stratergy!
 st.sidebar.header('User Input Parameters')
 
 def user_input_features():
-    tv = st.sidebar.slider('TV', 4.3, 7.9, 5.4)
-    radio = st.sidebar.slider('Radio', 2.0, 4.4, 3.4)
-    newspaper = st.sidebar.slider('Newspaper', 1.0, 6.9, 1.3)
+    tv = st.sidebar.slider('TV', 0.7, 296.0, 10.0)
+    radio = st.sidebar.slider('Radio', 0.0, 50.0, 15.0)
+    newspaper = st.sidebar.slider('Newspaper', 0.3, 114.0, 15.0)
     data = {'TV': tv,
             'Radio': radio,
             'Newspaper': newspaper}
